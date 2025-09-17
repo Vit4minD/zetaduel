@@ -30,12 +30,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
   const connect = useCallback(() => {
     if (!socket) {
-      const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001';
-      const newSocket = io(serverUrl, {
-        transports: ['websocket', 'polling'], // Ensure compatibility with Render
-        timeout: 20000,
-        forceNew: true,
-      });
+      const newSocket = io(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001');
       
       newSocket.on('connect', () => {
         console.log('Connected to server');
