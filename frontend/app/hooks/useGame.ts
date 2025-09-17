@@ -11,6 +11,7 @@ export interface Player {
 export interface GameState {
   gameId: string | null;
   players: Player[];
+  currentPlayerId: string | null;
   currentProblem: string | null;
   timeRemaining: number;
   isInQueue: boolean;
@@ -30,6 +31,7 @@ export const useGame = () => {
   const [gameState, setGameState] = useState<GameState>({
     gameId: null,
     players: [],
+    currentPlayerId: null,
     currentProblem: null,
     timeRemaining: 120,
     isInQueue: false,
@@ -78,6 +80,7 @@ export const useGame = () => {
       setGameState(prev => ({
         ...prev,
         gameId: data.gameId,
+        currentPlayerId: data.currentPlayerId,
         players: data.players,
         timeRemaining: data.timeRemaining,
         isInQueue: false,
