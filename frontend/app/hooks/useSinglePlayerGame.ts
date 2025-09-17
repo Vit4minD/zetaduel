@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+import { analytics } from '@/app/utils/analytics';
 
 interface Problem {
   question: string;
@@ -112,6 +113,9 @@ export const useSinglePlayerGame = () => {
       problemIndex: 0,
     });
 
+    // Track game start
+    analytics.gameStarted('single');
+
     // Start timer
     const newTimer = setInterval(() => {
       setGameState(prev => {
@@ -122,9 +126,14 @@ export const useSinglePlayerGame = () => {
           const result = { score: prev.score, duration };
           
           // Update high score if needed
-          if (prev.score > highScore) {
+          const isNewHighScore = prev.score > highScore;
+          if (isNewHighScore) {
             setHighScore(prev.score);
+            analytics.highScoreAchieved(prev.score, highScore);
           }
+
+          // Track game completion
+          analytics.gameCompleted('single', prev.score, duration);
 
           return {
             ...prev,
@@ -145,6 +154,9 @@ export const useSinglePlayerGame = () => {
 
     // Direct comparison for pre-calculated integer answers (much faster)
     const isCorrect = answer === gameState.currentProblem.answer;
+    
+    // Track problem solving
+    analytics.problemSolved(isCorrect);
     
     if (isCorrect) {
       // Get next problem from pre-generated sequence

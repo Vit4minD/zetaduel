@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSocket } from '@/app/contexts/SocketContext';
+import { analytics } from '@/app/utils/analytics';
 
 export interface Player {
   id: string;
@@ -47,6 +48,7 @@ export const useGame = () => {
     if (socket && isConnected && !gameState.isInQueue && !gameState.isPlaying) {
       socket.emit('joinQueue');
       setGameState(prev => ({ ...prev, isInQueue: true, gameResult: null }));
+      analytics.queueJoined();
     }
   }, [socket, isConnected, gameState.isInQueue, gameState.isPlaying]);
 
@@ -56,6 +58,7 @@ export const useGame = () => {
       socket.emit('leaveQueue');
       setGameState(prev => ({ ...prev, isInQueue: false }));
       setQueuePosition(null);
+      analytics.queueLeft();
     }
   }, [socket, gameState.isInQueue]);
 
@@ -88,6 +91,7 @@ export const useGame = () => {
         gameResult: null,
       }));
       setQueuePosition(null);
+      analytics.gameStarted('multiplayer');
     });
 
     socket.on('newProblem', (data) => {
@@ -123,6 +127,12 @@ export const useGame = () => {
         isPlaying: false,
         gameResult: data,
       }));
+      
+      // Track game completion
+      const currentPlayer = data.players.find((p: any) => p.id === gameState.currentPlayerId);
+      if (currentPlayer) {
+        analytics.gameCompleted('multiplayer', currentPlayer.score, data.duration);
+      }
     });
 
     socket.on('opponentDisconnected', () => {

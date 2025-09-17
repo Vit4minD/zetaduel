@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SocketProvider } from "@/app/contexts/SocketContext";
 import StructuredData from "@/app/components/StructuredData";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,6 +85,8 @@ export default function RootLayout({
           {children}
         </SocketProvider>
         <StructuredData />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
