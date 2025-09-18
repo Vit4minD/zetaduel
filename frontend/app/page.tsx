@@ -87,7 +87,6 @@ export default function Home() {
     return (
       <ResultsScreen
         gameResult={multiplayerGameState.gameResult}
-        currentPlayerId={multiplayerGameState.currentPlayerId}
         onPlayAgain={handleJoinQueue}
       />
     );
@@ -98,7 +97,6 @@ export default function Home() {
     return (
       <GameScreen
         players={multiplayerGameState.players}
-        currentPlayerId={multiplayerGameState.currentPlayerId}
         currentProblem={multiplayerGameState.currentProblem}
         timeRemaining={multiplayerGameState.timeRemaining}
         onSubmitAnswer={submitMultiplayerAnswer}

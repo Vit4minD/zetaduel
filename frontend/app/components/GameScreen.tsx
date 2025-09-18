@@ -5,7 +5,6 @@ import { Player } from '@/app/hooks/useGame';
 
 interface GameScreenProps {
   players: Player[];
-  currentPlayerId: string | null;
   currentProblem: string | null;
   timeRemaining: number;
   onSubmitAnswer: (answer: number) => void;
@@ -14,7 +13,6 @@ interface GameScreenProps {
 
 export const GameScreen: React.FC<GameScreenProps> = ({
   players,
-  currentPlayerId,
   currentProblem,
   timeRemaining,
   onSubmitAnswer,
@@ -68,9 +66,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Properly identify current player and opponent
-  const currentPlayer = players.find(p => p.id === currentPlayerId);
-  const opponent = players.find(p => p.id !== currentPlayerId);
+  // For now, assume first player is current user - this should be improved with actual socket ID tracking
+  const currentPlayer = players[0];
+  const opponent = players[1];
 
   return (
     <div className="min-h-screen bg-white font-mono p-8">

@@ -5,18 +5,16 @@ import { GameResult } from '@/app/hooks/useGame';
 
 interface ResultsScreenProps {
   gameResult: GameResult;
-  currentPlayerId?: string | null;
   onPlayAgain: () => void;
 }
 
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({
   gameResult,
-  currentPlayerId,
   onPlayAgain,
 }) => {
-  // Properly identify current player and opponent
-  const currentPlayer = gameResult.players.find(p => p.id === currentPlayerId) || gameResult.players[0];
-  const opponent = gameResult.players.find(p => p.id !== currentPlayerId) || gameResult.players[1];
+  // For now, assume first player is current user - this should be improved with actual socket ID tracking
+  const currentPlayer = gameResult.players[0];
+  const opponent = gameResult.players[1];
   const isWinner = gameResult.winner === currentPlayer?.id;
   const isDraw = gameResult.winner === null;
 

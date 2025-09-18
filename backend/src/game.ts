@@ -53,15 +53,11 @@ export class Game {
       player.socket.join(this.id);
     });
 
-    // Send game start event to each player with their specific role
-    this.players.forEach(player => {
-      const otherPlayers = this.players.filter(p => p.id !== player.id);
-      player.socket.emit('gameStart', {
-        gameId: this.id,
-        currentPlayerId: player.id,
-        players: this.players.map(p => ({ id: p.id, score: p.score })),
-        timeRemaining: this.timeRemaining
-      });
+    // Send game start event
+    this.io.to(this.id).emit('gameStart', {
+      gameId: this.id,
+      players: this.players.map(p => ({ id: p.id, score: p.score })),
+      timeRemaining: this.timeRemaining
     });
 
     // Generate first problem for each player
