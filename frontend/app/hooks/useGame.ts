@@ -98,13 +98,22 @@ export const useGame = () => {
     });
 
     socket.on('scoreUpdate', (data: { scores: { id: string; score: number }[] }) => {
-      setGameState(prev => ({
-        ...prev,
-        players: prev.players.map(player => {
+      console.log('Score update received:', data);
+      setGameState(prev => {
+        console.log('Current players:', prev.players);
+        console.log('Current player ID:', prev.currentPlayerId);
+        
+        const updatedPlayers = prev.players.map(player => {
           const updatedScore = data.scores.find((s) => s.id === player.id);
+          console.log(`Player ${player.id} (${player.id === prev.currentPlayerId ? 'YOU' : 'OPPONENT'}): ${player.score} -> ${updatedScore?.score || player.score}`);
           return updatedScore ? { ...player, score: updatedScore.score } : player;
-        }),
-      }));
+        });
+        
+        return {
+          ...prev,
+          players: updatedPlayers,
+        };
+      });
     });
 
     socket.on('timeUpdate', (data) => {

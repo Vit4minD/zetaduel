@@ -71,6 +71,16 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   // Properly identify current player and opponent
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const opponent = players.find(p => p.id !== currentPlayerId);
+  
+  // Debug logging
+  console.log('GameScreen Debug:', {
+    currentPlayerId,
+    players,
+    currentPlayer,
+    opponent,
+    currentPlayerScore: currentPlayer?.score,
+    opponentScore: opponent?.score
+  });
 
   return (
     <div className="min-h-screen bg-white font-mono p-8">
