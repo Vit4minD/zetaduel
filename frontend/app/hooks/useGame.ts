@@ -77,11 +77,17 @@ export const useGame = () => {
 
     // Game events
     socket.on('gameStart', (data) => {
+      // Ensure players array is properly initialized with scores
+      const initializedPlayers = data.players.map((player: Player) => ({
+        ...player,
+        score: player.score || 0, // Ensure score is initialized
+      }));
+      
       setGameState(prev => ({
         ...prev,
         gameId: data.gameId,
         currentPlayerId: data.currentPlayerId,
-        players: data.players,
+        players: initializedPlayers,
         timeRemaining: data.timeRemaining,
         isInQueue: false,
         isPlaying: true,
@@ -98,16 +104,27 @@ export const useGame = () => {
     });
 
     socket.on('scoreUpdate', (data: { scores: { id: string; score: number }[] }) => {
-      console.log('Score update received:', data);
       setGameState(prev => {
-        console.log('Current players:', prev.players);
-        console.log('Current player ID:', prev.currentPlayerId);
-        
+        // Ensure we maintain the correct player order and identification
         const updatedPlayers = prev.players.map(player => {
-          const updatedScore = data.scores.find((s) => s.id === player.id);
-          console.log(`Player ${player.id} (${player.id === prev.currentPlayerId ? 'YOU' : 'OPPONENT'}): ${player.score} -> ${updatedScore?.score || player.score}`);
-          return updatedScore ? { ...player, score: updatedScore.score } : player;
+          const scoreUpdate = data.scores.find((s) => s.id === player.id);
+          if (scoreUpdate) {
+            return { ...player, score: scoreUpdate.score };
+          }
+          return player;
         });
+        
+        // If we don't have players yet but received scores, create them
+        if (prev.players.length === 0 && data.scores.length > 0) {
+          const newPlayers = data.scores.map(score => ({
+            id: score.id,
+            score: score.score
+          }));
+          return {
+            ...prev,
+            players: newPlayers,
+          };
+        }
         
         return {
           ...prev,
