@@ -9,7 +9,8 @@
     "dev:backend": "cd backend && npm run dev",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
     "build": "cd frontend && npm run build",
-    "start": "cd backend && npm start"
+    "start": "cd frontend && npm start",
+    "postinstall": "cd frontend && npm install"
   },
   "keywords": ["multiplayer", "arithmetic", "game", "math", "realtime"],
   "author": "ZetaDuel Team",

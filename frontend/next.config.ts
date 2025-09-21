@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001',
   },
-  // Enable standalone output for better deployment
-  output: 'standalone',
+  // Remove standalone output for Vercel deployment
+  // output: 'standalone',
   // Optimize for Vercel deployment
   experimental: {
     // Enable optimizations
