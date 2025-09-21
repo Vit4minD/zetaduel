@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   },
   // Remove standalone output for Vercel deployment
   // output: 'standalone',
+  // Fix workspace root detection warning
+  outputFileTracingRoot: require('path').join(__dirname, '../'),
   // Optimize for Vercel deployment
   experimental: {
     // Enable optimizations
