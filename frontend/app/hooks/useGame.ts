@@ -97,11 +97,11 @@ export const useGame = () => {
       }));
     });
 
-    socket.on('scoreUpdate', (data) => {
+    socket.on('scoreUpdate', (data: { scores: { id: string; score: number }[] }) => {
       setGameState(prev => ({
         ...prev,
         players: prev.players.map(player => {
-          const updatedScore = data.scores.find((s: any) => s.id === player.id);
+          const updatedScore = data.scores.find((s) => s.id === player.id);
           return updatedScore ? { ...player, score: updatedScore.score } : player;
         }),
       }));
